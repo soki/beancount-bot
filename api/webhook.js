@@ -65,40 +65,39 @@ module.exports = async (request, response) => {
                 return;
             }
             
-            //提交到github
-            const d = new Date();
-            const mon = d.getMonth()+1;
-            const filename = d.getFullYear().toString()+'/0-default/'+mon.toString()+'-expenses.bean';
-            const owner = 'soki';
-            const repo = 'mymoney';
-            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-            const resp = await octokit.request(
-              'GET /repos/{owner}/{repo}/contents/'+filename,
-              {
-                owner: owner,
-                repo: repo,
-              },
-            );
-
-            const { content: encodeContent, encoding, sha, path } = resp.data;
-            const content = Buffer.from(encodeContent, encoding).toString();
-
-            await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
-              path,
-              sha,
-              owner: owner,
-              repo: repo,
-              message: 'bot',
-              content: Buffer.from(`${content}${text}\n\n`).toString('base64'),
-            });
-
-            //修改状态
-            let res = '⛔ 已取消';
+            let optext = '⛔ 已取消';
             if (typ == '1_') {
-                res = '✅ 已提交';
+                optext = '✅ 已提交';
+
+                //提交到github
+                const d = new Date();
+                const mon = d.getMonth()+1;
+                const filename = d.getFullYear().toString()+'/0-default/'+mon.toString()+'-expenses.bean';
+                const owner = 'soki';
+                const repo = 'mymoney';
+                const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+                const resp = await octokit.request(
+                  'GET /repos/{owner}/{repo}/contents/'+filename,
+                  {
+                    owner: owner,
+                    repo: repo,
+                  },
+                );
+
+                const { content: encodeContent, encoding, sha, path } = resp.data;
+                const content = Buffer.from(encodeContent, encoding).toString();
+
+                await octokit.request('PUT /repos/{owner}/{repo}/contents/{path}', {
+                  path,
+                  sha,
+                  owner: owner,
+                  repo: repo,
+                  message: 'bot',
+                  content: Buffer.from(`${content}${text}\n\n`).toString('base64'),
+                });
             }
 
-            await bot.editMessageText(message.text+'\n\n'+res , {
+            await bot.editMessageText(message.text+'\n\n'+optext, {
                 chat_id: message.chat.id,
                 message_id: message.message_id
             });
