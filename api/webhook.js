@@ -25,6 +25,14 @@ const config = {
     日用品: 'Expenses:Shopping:Home',
     医疗健康: 'Expenses:Health',
   },
+  formula: {
+    "肥仔水": "@肥仔水 {{amount}} Assets:Cash > Expenses:Food:Other",
+    "滴滴": "@滴滴 {{amount}} Assets:Cash > Expenses:Transport:TAXI",
+    "买菜": "@买菜 {{amount}} Assets:Cash > Expenses:Food:Ingredients",
+    "水果": "@水果 {{amount}} Assets:Cash > Expenses:Food:Fruit",
+    "吃的": "{{pre}} Assets:Cash > Expenses:Food:Other",
+    "吃饭": "{{pre}} Assets:Cash > Expenses:Food:Restaurant",
+  },
 };
 
 const records = new Map();
@@ -50,23 +58,22 @@ module.exports = async (request, response) => {
 
             const reply_markup = {
                 inline_keyboard:[
-                    [{text:"提交",callback_data:'1_'+message_id}, {text:"取消",callback_data:'0_'+message_id}]
+                    [{text:"提交",callback_data:'y'+message_id}, {text:"取消",callback_data:'n'+message_id}]
                 ]
             };
             await bot.sendMessage(id, output, { reply_to_message_id: message_id, reply_markup: reply_markup });
         } else if (body.callback_query) {
             const { id, data, message } = body.callback_query;
-            const typ = data.slice(0, 2);
-            const record_idx = data.slice(2);
-
+            const typ = data.slice(0, 1);
+            const record_idx = data.slice(1);
             const text = records.get(record_idx);
             if (!text) {
-                await bot.answerCallbackQuery({callback_query_id: id, text: '未知错误'});
+                await bot.answerCallbackQuery(id, {text: '未知错误'});
                 return;
             }
             
             let optext = '⛔ 已取消';
-            if (typ == '1_') {
+            if (typ == 'y') {
                 optext = '✅ 已提交';
 
                 //提交到github

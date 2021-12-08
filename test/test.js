@@ -19,13 +19,22 @@ const config = {
     日用品: 'Expenses:Shopping:Home',
     医疗健康: 'Expenses:Health',
   },
+  formula: {
+    "肥仔水": "@肥仔水 {{amount}} Assets:Cash > Expenses:Food:Other",
+    "滴滴": "@滴滴 {{amount}} Assets:Cash > Expenses:Transport:TAXI",
+    "买菜": "@买菜 {{amount}} Assets:Cash > Expenses:Food:Ingredients",
+    "水果": "@水果 {{amount}} Assets:Cash > Expenses:Food:Fruit",
+    "吃的": "{{pre}} Assets:Cash > Expenses:Food:Other",
+    "吃饭": "{{pre}} Assets:Cash > Expenses:Food:Restaurant",
+  },
 };
 
 handle = async () =>{
-    const text = '@早餐 6.94 现金 > 吃饭'
-    const { output } = await costflow.parse(text, config)
-    console.log(output)
+    const text = '吃饭 @早餐 包子 20';
+    const { output } = await costflow.parse(text, config);
+    console.log(output);
 
+    /*
     const d = new Date();
     const mon = d.getMonth()+1;
     const filename = d.getFullYear().toString()+'/0-default/'+mon.toString()+'-expenses.bean';
@@ -53,6 +62,7 @@ handle = async () =>{
       message: 'bot',
       content: Buffer.from(`${content}${output}\n\n`).toString('base64'),
     });
+    */
 
 };
 
