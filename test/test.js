@@ -30,7 +30,7 @@ const config = {
 };
 
 handle = async () =>{
-    const text = '吃饭 @早餐 包子 20';
+    const text = '买菜 20';
     const { output } = await costflow.parse(text, config);
     console.log(output);
 

@@ -32,6 +32,8 @@ const config = {
     "水果": "@水果 {{amount}} Assets:Cash > Expenses:Food:Fruit",
     "吃的": "{{pre}} Assets:Cash > Expenses:Food:Other",
     "吃饭": "{{pre}} Assets:Cash > Expenses:Food:Restaurant",
+    "发红包": "@发红包 {{amount}} Assets:Cash > Expenses:RedEnvelope",
+    "收红包": "@收红包 {{-amount}} Income:RedEnvelope > Assets:Cash",
   },
 };
 
