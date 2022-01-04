@@ -95,7 +95,7 @@ module.exports = async (request, response) => {
                 //提交到github
                 const d = new Date();
                 const mon = d.getMonth()+1;
-                const filename = d.getFullYear().toString()+'/0-default/'+mon.toString()+'-expenses.bean';
+                const filename = d.getFullYear().toString()+'/0-default/'+mon.toString().padStart(2,'0')+'-expenses.bean';
                 const owner = 'soki';
                 const repo = 'mymoney';
                 const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
